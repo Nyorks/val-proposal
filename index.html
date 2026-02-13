@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valentine's Proposal</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&amp;family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+  <style>
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.1); }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.15); }
+    }
+    @keyframes fall {
+      0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100%) rotate(360deg); opacity: 0.3; }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .floating { animation: float 3s ease-in-out infinite; }
+    .heartbeat { animation: heartbeat 1.5s ease-in-out infinite; }
+    .falling-flower {
+      position: absolute;
+      animation: fall linear infinite;
+      pointer-events: none;
+    }
+    .shimmer-text {
+      background: linear-gradient(90deg, #be185d, #f472b6, #be185d);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s linear infinite;
+    }
+    .card-hover {
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .card-hover:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 25px 50px -12px rgba(190, 24, 93, 0.4);
+    }
+    .no-btn {
+      transition: all 0.1s ease;
+    }
+    .letter-bg {
+      background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbcfe8 100%);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto">
+  <div id="app" class="min-h-full w-full bg-gradient-to-br from-pink-100 via-rose-50 to-red-100"><!-- Proposal Screen -->
+   <div id="proposal-screen" class="min-h-full w-full flex flex-col items-center justify-center p-8 relative overflow-hidden"><!-- Floating hearts background -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+     <div class="absolute top-10 left-10 text-6xl floating" style="animation-delay: 0s;">
+      💕
+     </div>
+     <div class="absolute top-20 right-20 text-5xl floating" style="animation-delay: 0.5s;">
+      💗
+     </div>
+     <div class="absolute bottom-20 left-20 text-4xl floating" style="animation-delay: 1s;">
+      💖
+     </div>
+     <div class="absolute bottom-10 right-10 text-6xl floating" style="animation-delay: 1.5s;">
+      💝
+     </div>
+     <div class="absolute top-1/2 left-5 text-3xl floating" style="animation-delay: 2s;">
+      🌹
+     </div>
+     <div class="absolute top-1/3 right-5 text-3xl floating" style="animation-delay: 2.5s;">
+      🌹
+     </div>
+    </div>
+    <div class="text-center z-10 max-w-2xl">
+     <div class="text-8xl mb-6 heartbeat">
+      💘
+     </div>
+     <h1 class="text-5xl md:text-6xl font-bold mb-4 shimmer-text" style="font-family: 'Dancing Script', cursive;"><span id="her-name-display">My Love</span></h1>
+     <p class="text-2xl md:text-3xl text-rose-700 mb-12" style="font-family: 'Cormorant Garamond', serif; font-style: italic;">Will you be my Valentine? 💕</p>
+     <div class="flex flex-wrap gap-6 justify-center items-center"><button id="yes-btn" class="px-12 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-2xl font-bold rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300" style="font-family: 'Dancing Script', cursive;"> Yes! 💖 </button> <button id="no-btn" class="no-btn px-8 py-3 bg-gray-300 text-gray-600 text-lg rounded-full shadow hover:bg-gray-400 transition-all" style="font-family: 'Dancing Script', cursive;"> No... </button>
+     </div>
+     <p id="chase-message" class="mt-8 text-rose-500 text-lg opacity-0 transition-opacity duration-300" style="font-family: 'Cormorant Garamond', serif;">Hehe, you can't escape my love! 💕</p>
+    </div>
+   </div><!-- Cards Screen -->
+   <div id="cards-screen" class="min-h-full w-full hidden p-8">
+    <div class="max-w-6xl mx-auto">
+     <div class="text-center mb-12">
+      <h2 class="text-5xl font-bold text-rose-600 mb-4 shimmer-text" style="font-family: 'Dancing Script', cursive;">Yay! You said Yes! 🎉</h2>
+      <p class="text-xl text-rose-500" style="font-family: 'Cormorant Garamond', serif;">Here are your special Valentine's gifts, my love 💝</p>
+     </div>
+     <div class="grid md:grid-cols-3 gap-8"><!-- Card 1: Love Letter -->
+      <div class="card-hover cursor-pointer bg-white rounded-3xl shadow-xl overflow-hidden border-4 border-pink-200" onclick="showCard(1)">
+       <div class="h-48 bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center"><span class="text-7xl">💌</span>
+       </div>
+       <div class="p-6 text-center">
+        <h3 class="text-2xl font-bold text-rose-600 mb-2" style="font-family: 'Dancing Script', cursive;">Love Letter</h3>
+        <p class="text-rose-400" style="font-family: 'Cormorant Garamond', serif;">Words from my heart</p>
+       </div>
+      </div><!-- Card 2: Music -->
+      <div class="card-hover cursor-pointer bg-white rounded-3xl shadow-xl overflow-hidden border-4 border-pink-200" onclick="showCard(2)">
+       <div class="h-48 bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center"><span class="text-7xl">🎵</span>
+       </div>
+       <div class="p-6 text-center">
+        <h3 class="text-2xl font-bold text-rose-600 mb-2" style="font-family: 'Dancing Script', cursive;">Our Song</h3>
+        <p class="text-rose-400" style="font-family: 'Cormorant Garamond', serif;">A melody for us</p>
+       </div>
+      </div><!-- Card 3: Date Invitation -->
+      <div class="card-hover cursor-pointer bg-white rounded-3xl shadow-xl overflow-hidden border-4 border-pink-200" onclick="showCard(3)">
+       <div class="h-48 bg-gradient-to-br from-red-400 to-pink-500 flex items-center justify-center"><span class="text-7xl">💐</span>
+       </div>
+       <div class="p-6 text-center">
+        <h3 class="text-2xl font-bold text-rose-600 mb-2" style="font-family: 'Dancing Script', cursive;">Date Invitation</h3>
+        <p class="text-rose-400" style="font-family: 'Cormorant Garamond', serif;">Our special day awaits</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- Card 1: Love Letter Screen -->
+   <div id="letter-screen" class="min-h-full w-full hidden p-8 letter-bg">
+    <div class="max-w-4xl mx-auto relative"><button onclick="goBack()" class="mb-6 px-6 py-2 bg-white/80 text-rose-500 rounded-full shadow hover:bg-white transition-all flex items-center gap-2" style="font-family: 'Dancing Script', cursive;"> <span>←</span> Back to Gifts </button>
+     <div class="flex items-start gap-8"><!-- Lily of the Valley - Left -->
+      <div class="hidden md:block flex-shrink-0">
+       <svg width="120" height="400" viewbox="0 0 120 400" class="floating"><path d="M60 400 Q60 200 55 100 Q50 50 60 0" stroke="#22c55e" stroke-width="3" fill="none" /> <ellipse cx="45" cy="80" rx="15" ry="20" fill="white" stroke="#e5e7eb" stroke-width="1" /> <ellipse cx="40" cy="120" rx="14" ry="18" fill="white" stroke="#e5e7eb" stroke-width="1" /> <ellipse cx="38" cy="160" rx="13" ry="17" fill="white" stroke="#e5e7eb" stroke-width="1" /> <ellipse cx="42" cy="200" rx="12" ry="16" fill="white" stroke="#e5e7eb" stroke-width="1" /> <ellipse cx="75" cy="100" rx="15" ry="20" fill="white" stroke="#e5e7eb" stroke-width="1" /> <ellipse cx="78" cy="140" rx="14" ry="18" fill="white" stroke="#e5e7eb" stroke-width="1" /> <ellipse cx="76" cy="180" rx="13" ry="17" fill="white" stroke="#e5e7eb" stroke-width="1" /> <path d="M20 350 Q30 300 40 380" stroke="#22c55e" stroke-width="8" fill="#22c55e" /> <path d="M100 350 Q90 300 80 380" stroke="#22c55e" stroke-width="8" fill="#22c55e" />
+       </svg>
+      </div><!-- Letter -->
+      <div class="flex-grow bg-white/90 rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-pink-100 relative">
+       <div class="absolute top-4 right-4 text-4xl">
+        💕
+       </div>
+       <div class="absolute bottom-4 left-4 text-3xl">
+        🌸
+       </div>
+       <h2 class="text-4xl font-bold text-rose-500 mb-6 text-center" style="font-family: 'Dancing Script', cursive;">My Dearest <span id="letter-name">Love</span> 💝</h2>
+       <div id="letter-content" class="text-xl text-gray-700 leading-relaxed whitespace-pre-wrap" style="font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; line-height: 2;">
+        From the moment I met you, my life has been filled with joy and warmth. Every day with you feels like a beautiful dream I never want to wake up from. Your smile lights up my world, your laugh is my favorite melody, and your love is the greatest gift I've ever received. I promise to cherish you, support you, and love you with all my heart, today and always. You are my everything. 💖
+       </div>
+       <p class="text-right mt-8 text-2xl text-rose-400" style="font-family: 'Dancing Script', cursive;">Forever Yours 💕</p>
+      </div><!-- Lily of the Valley - Right -->
+      <div class="hidden md:block flex-shrink-0">
+       <svg width="120" height="400" viewbox="0 0 120 400" class="floating" style="animation-delay: 1s;"><path d="M60 400 Q60 200 65 100 Q70 50 60 0" stroke="#22c55e" stroke-width="3" fill="none" /> <ellipse cx="75" cy="80" rx="15" ry="20" fill="white" stroke="#e5e7eb" stroke-width="1" /> <ellipse cx="80" cy="120" rx="14" ry="18" fill="white" stroke="#e5e7eb" stroke-width="1" /> <ellipse cx="82" cy="160" rx="13" ry="17" fill="white" stroke="#e5e7eb" stroke-width="1" /> <ellipse cx="78" cy="200" rx="12" ry="16" fill="white" stroke="#e5e7eb" stroke-width="1" /> <ellipse cx="45" cy="100" rx="15" ry="20" fill="white" stroke="#e5e7eb" stroke-width="1" /> <ellipse cx="42" cy="140" rx="14" ry="18" fill="white" stroke="#e5e7eb" stroke-width="1" /> <ellipse cx="44" cy="180" rx="13" ry="17" fill="white" stroke="#e5e7eb" stroke-width="1" /> <path d="M100 350 Q90 300 80 380" stroke="#22c55e" stroke-width="8" fill="#22c55e" /> <path d="M20 350 Q30 300 40 380" stroke="#22c55e" stroke-width="8" fill="#22c55e" />
+       </svg>
+      </div>
+     </div>
+    </div>
+   </div><!-- Card 2: Music/YouTube Screen -->
+   <div id="music-screen" class="min-h-full w-full hidden p-8 bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
+    <div class="max-w-5xl mx-auto"><button onclick="goBack()" class="mb-6 px-6 py-2 bg-white/20 text-white rounded-full shadow hover:bg-white/30 transition-all flex items-center gap-2" style="font-family: 'Dancing Script', cursive;"> <span>←</span> Back to Gifts </button>
+     <h2 class="text-4xl font-bold text-pink-300 mb-12 text-center" style="font-family: 'Dancing Script', cursive;">Our Song 🎵</h2><!-- YouTube Video Player - Large -->
+     <div class="mb-8">
+      <p class="text-pink-300/70 text-sm mb-6 text-center" style="font-family: 'Cormorant Garamond', serif;">Watch our song on YouTube 🎬</p>
+      <div id="youtube-container" class="w-full max-w-4xl mx-auto">
+       <div id="youtube-placeholder" class="w-full h-96 md:h-[32rem] rounded-3xl shadow-2xl border-4 border-pink-300 bg-gradient-to-br from-purple-900 to-gray-900 flex items-center justify-center">
+        <p class="text-pink-300/50 text-center px-6 text-lg" style="font-family: 'Cormorant Garamond', serif;">Paste a YouTube URL in the edit panel to see the video here 📹</p>
+       </div><iframe id="youtube-video" class="w-full h-96 md:h-[32rem] rounded-3xl shadow-2xl hidden" style="border: 4px solid #f472b6;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <p class="text-pink-300/70 text-sm mt-6 text-center" style="font-family: 'Cormorant Garamond', serif;">Find the share URL from YouTube and paste it in the edit panel 💕</p>
+     </div><!-- Memory Photo -->
+     <div class="mt-12">
+      <p class="text-pink-300/70 text-sm mb-4 text-center" style="font-family: 'Cormorant Garamond', serif;">A memory that reminds me of you 💭</p>
+      <div id="memory-photo-container" class="w-full max-w-2xl mx-auto"><img id="memory-photo" src="" alt="Memory photo" loading="lazy" class="w-full h-64 object-cover rounded-2xl shadow-lg border-4 border-pink-300" onerror="console.error('Image failed to load:', this.src); this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)'; this.alt='Photo unavailable';">
+      </div>
+      <p class="text-pink-300/70 text-sm mt-4 text-center" style="font-family: 'Cormorant Garamond', serif;">Add your memory photo URL in the edit panel 📸</p>
+     </div>
+     <audio id="audio-player" loop></audio>
+    </div>
+   </div><!-- Card 3: Date Invitation Screen -->
+   <div id="invitation-screen" class="min-h-full w-full hidden p-8 bg-gradient-to-br from-rose-100 via-pink-50 to-red-100 relative overflow-hidden"><!-- Falling flowers container -->
+    <div id="falling-flowers" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+    <div class="max-w-2xl mx-auto relative z-10"><button onclick="goBack()" class="mb-6 px-6 py-2 bg-white/80 text-rose-500 rounded-full shadow hover:bg-white transition-all flex items-center gap-2" style="font-family: 'Dancing Script', cursive;"> <span>←</span> Back to Gifts </button> <!-- Invitation Card -->
+     <div class="bg-white/95 rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-pink-200 text-center relative">
+      <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 text-5xl">
+       💐
+      </div>
+      <p class="text-rose-400 text-lg mb-2" style="font-family: 'Cormorant Garamond', serif; letter-spacing: 0.2em;">YOU ARE CORDIALLY INVITED</p>
+      <h2 class="text-5xl font-bold shimmer-text mb-6" style="font-family: 'Dancing Script', cursive;">Valentine's Date</h2>
+      <div class="w-24 h-1 bg-gradient-to-r from-pink-300 via-rose-400 to-pink-300 mx-auto mb-6 rounded-full"></div>
+      <div class="space-y-6 text-gray-700" style="font-family: 'Cormorant Garamond', serif;">
+       <div>
+        <p class="text-rose-400 text-sm uppercase tracking-widest mb-1">When</p>
+        <p id="date-time-display" class="text-2xl">February 14th, 7:00 PM</p>
+       </div>
+       <div>
+        <p class="text-rose-400 text-sm uppercase tracking-widest mb-1">Where</p>
+        <p id="location-display" class="text-2xl">A Special Place</p>
+       </div>
+       <div>
+        <p class="text-rose-400 text-sm uppercase tracking-widest mb-1">Dress Code</p>
+        <p id="dress-code-display" class="text-2xl">Your Beautiful Self</p>
+       </div>
+      </div>
+      <div class="mt-8 pt-6 border-t-2 border-pink-100">
+       <p class="text-xl text-rose-500" style="font-family: 'Dancing Script', cursive;">Can't wait to see you there! 💝</p>
+      </div>
+      <div class="absolute -bottom-4 left-10 text-3xl">
+       🌹
+      </div>
+      <div class="absolute -bottom-4 right-10 text-3xl">
+       🌹
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      her_name: "My Love",
+      letter_content: `From the moment I met you, my life has been filled with joy and warmth. Every day with you feels like a beautiful dream I never want to wake up from.
+
+Your smile lights up my world, your laugh is my favorite melody, and your love is the greatest gift I've ever received.
+
+I promise to cherish you, support you, and love you with all my heart, today and always.
+
+You are my everything. 💖`,
+      song_url: "",
+      youtube_url: "",
+      song_photo_url: "",
+      date_location: "A Special Place",
+      date_time: "February 14th, 7:00 PM",
+      dress_code: "Your Beautiful Self",
+      background_color: "#fce7f3",
+      accent_color: "#be185d",
+      text_color: "#9f1239",
+      button_color: "#ec4899",
+      card_color: "#ffffff"
+    };
+
+    let config = { ...defaultConfig };
+    let noButtonAttempts = 0;
+    let flowerInterval = null;
+
+    // No button chase logic
+    const noBtn = document.getElementById('no-btn');
+    const yesBtn = document.getElementById('yes-btn');
+    const chaseMessage = document.getElementById('chase-message');
+
+    yesBtn.addEventListener('mouseenter', function() {
+      yesBtn.style.animation = 'pulse 0.6s ease-in-out';
+      setTimeout(() => yesBtn.style.animation = '', 600);
+    });
+
+    noBtn.addEventListener('mouseenter', runAway);
+    noBtn.addEventListener('touchstart', runAway);
+    noBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      runAway();
+    });
+
+    function runAway() {
+      noButtonAttempts++;
+      chaseMessage.style.opacity = '1';
+      
+      const messages = [
+        "Hehe, you can't escape my love! 💕",
+        "Nice try! But no isn't an option 😘",
+        "The button is shy! Just like my love for you 💖",
+        "Oops! That button doesn't work 😉",
+        "You're stuck with me forever! 💝",
+        "Just say YES already! 🥰"
+      ];
+      chaseMessage.textContent = messages[Math.min(noButtonAttempts - 1, messages.length - 1)];
+      
+      const container = noBtn.parentElement;
+      const rect = container.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+      
+      let newX = Math.random() * 200 - 100;
+      let newY = Math.random() * 100 - 50;
+      
+      noBtn.style.transform = `translate(${newX}px, ${newY}px)`;
+      
+      if (noButtonAttempts > 3) {
+        noBtn.style.fontSize = `${Math.max(8, 18 - noButtonAttempts)}px`;
+        noBtn.style.padding = `${Math.max(4, 12 - noButtonAttempts)}px ${Math.max(8, 32 - noButtonAttempts * 2)}px`;
+      }
+      
+      if (noButtonAttempts > 6) {
+        noBtn.style.opacity = '0.5';
+      }
+      
+      // Make yes button grow
+      const scale = 1 + (noButtonAttempts * 0.05);
+      yesBtn.style.transform = `scale(${Math.min(scale, 1.3)})`;
+    }
+
+    yesBtn.addEventListener('click', function() {
+      document.getElementById('proposal-screen').classList.add('hidden');
+      document.getElementById('cards-screen').classList.remove('hidden');
+    });
+
+    function showCard(cardNum) {
+      document.getElementById('cards-screen').classList.add('hidden');
+      
+      if (cardNum === 1) {
+        document.getElementById('letter-screen').classList.remove('hidden');
+      } else if (cardNum === 2) {
+        document.getElementById('music-screen').classList.remove('hidden');
+      } else if (cardNum === 3) {
+        document.getElementById('invitation-screen').classList.remove('hidden');
+        startFallingFlowers();
+      }
+    }
+
+    function goBack() {
+      stopFallingFlowers();
+      document.getElementById('letter-screen').classList.add('hidden');
+      document.getElementById('music-screen').classList.add('hidden');
+      document.getElementById('invitation-screen').classList.add('hidden');
+      document.getElementById('cards-screen').classList.remove('hidden');
+    }
+
+    function startFallingFlowers() {
+      const container = document.getElementById('falling-flowers');
+      container.innerHTML = '';
+      
+      const flowers = ['🌸', '🌺', '🌹', '💐', '🌷', '🪻', '🏵️', '💮'];
+      
+      function createFlower() {
+        const flower = document.createElement('div');
+        flower.className = 'falling-flower';
+        flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+        flower.style.left = Math.random() * 100 + '%';
+        flower.style.fontSize = (Math.random() * 20 + 15) + 'px';
+        flower.style.animationDuration = (Math.random() * 5 + 5) + 's';
+        flower.style.animationDelay = Math.random() * 2 + 's';
+        container.appendChild(flower);
+        
+        setTimeout(() => flower.remove(), 12000);
+      }
+      
+      for (let i = 0; i < 15; i++) {
+        setTimeout(createFlower, i * 200);
+      }
+      
+      flowerInterval = setInterval(createFlower, 800);
+    }
+
+    function stopFallingFlowers() {
+      if (flowerInterval) {
+        clearInterval(flowerInterval);
+        flowerInterval = null;
+      }
+    }
+
+    function convertYouTubeUrl(url) {
+      if (!url) return '';
+      
+      // Handle different YouTube URL formats
+      let videoId = '';
+      
+      // Format: https://www.youtube.com/watch?v=VIDEOID
+      if (url.includes('watch?v=')) {
+        videoId = url.split('watch?v=')[1].split('&')[0];
+      }
+      // Format: https://youtu.be/VIDEOID
+      else if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1].split('?')[0];
+      }
+      // Format: https://www.youtube.com/embed/VIDEOID
+      else if (url.includes('/embed/')) {
+        videoId = url.split('/embed/')[1].split('?')[0];
+      }
+      
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
+    }
+
+    async function onConfigChange(cfg) {
+      config = { ...defaultConfig, ...cfg };
+      
+      // Update name displays
+      document.getElementById('her-name-display').textContent = config.her_name || defaultConfig.her_name;
+      document.getElementById('letter-name').textContent = config.her_name || defaultConfig.her_name;
+      
+      // Update letter content
+      document.getElementById('letter-content').textContent = config.letter_content || defaultConfig.letter_content;
+      
+      // Update invitation details
+      document.getElementById('date-time-display').textContent = config.date_time || defaultConfig.date_time;
+      document.getElementById('location-display').textContent = config.date_location || defaultConfig.date_location;
+      document.getElementById('dress-code-display').textContent = config.dress_code || defaultConfig.dress_code;
+      
+      // Update YouTube video if changed
+      if (config.youtube_url) {
+        const embedUrl = convertYouTubeUrl(config.youtube_url);
+        if (embedUrl) {
+          const youtubeVideo = document.getElementById('youtube-video');
+          const youtubePlaceholder = document.getElementById('youtube-placeholder');
+          
+          youtubeVideo.src = embedUrl;
+          youtubeVideo.classList.remove('hidden');
+          youtubePlaceholder.classList.add('hidden');
+        }
+      } else {
+        const youtubeVideo = document.getElementById('youtube-video');
+        const youtubePlaceholder = document.getElementById('youtube-placeholder');
+        youtubeVideo.classList.add('hidden');
+        youtubePlaceholder.classList.remove('hidden');
+        youtubeVideo.src = '';
+      }
+      
+      // Update memory photo if changed
+      const memoryPhoto = document.getElementById('memory-photo');
+      if (config.song_photo_url && memoryPhoto.src !== config.song_photo_url) {
+        memoryPhoto.src = config.song_photo_url;
+      }
+    }
+
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [
+          {
+            get: () => cfg.background_color || defaultConfig.background_color,
+            set: (v) => { cfg.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+          },
+          {
+            get: () => cfg.accent_color || defaultConfig.accent_color,
+            set: (v) => { cfg.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); }
+          },
+          {
+            get: () => cfg.text_color || defaultConfig.text_color,
+            set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+          },
+          {
+            get: () => cfg.button_color || defaultConfig.button_color,
+            set: (v) => { cfg.button_color = v; window.elementSdk.setConfig({ button_color: v }); }
+          },
+          {
+            get: () => cfg.card_color || defaultConfig.card_color,
+            set: (v) => { cfg.card_color = v; window.elementSdk.setConfig({ card_color: v }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ["her_name", cfg.her_name || defaultConfig.her_name],
+        ["letter_content", cfg.letter_content || defaultConfig.letter_content],
+        ["song_url", cfg.song_url || defaultConfig.song_url],
+        ["youtube_url", cfg.youtube_url || defaultConfig.youtube_url],
+        ["song_photo_url", cfg.song_photo_url || defaultConfig.song_photo_url],
+        ["date_location", cfg.date_location || defaultConfig.date_location],
+        ["date_time", cfg.date_time || defaultConfig.date_time],
+        ["dress_code", cfg.dress_code || defaultConfig.dress_code]
+      ]);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cd3e4a2f20188ff',t:'MTc3MDk4MTE3MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
